@@ -1,5 +1,13 @@
 # DHT22 Log Script
 
-This is a simple script that writes temperature and humidity information to `./log` from the DHT22 module, using Adafruit's (now depredated) [DHT Library](https://github.com/adafruit/Adafruit_Python_DHT).
+This simple python3 script logs temperature and humidity data from a DHT22 module connected to a Raspberry Pi to it's `./log` directory using Adafruit's (now depredated) [DHT Library](https://github.com/adafruit/Adafruit_Python_DHT).
 
-**Important** - Before running the script for the first time, edit `script.py` and make sure `DHT_PIN` is set to the correct GPIO number (not the pin number itself). For example, we use GPIO 14 but on the rPi it is pin #7.
+## Usage
+
+This script is meant to be used in a cron job. To modify crontab, open a terminal and run `crontab -e`, and append the appropriate command. Below is an example to log every minute indefinitely:
+
+```bash
+* * * * * python3 sensors/sensors.py
+```
+
+**Important** - Before defining any cron jobs make sure to update `script.py` and confirm that the `DHT_PIN` variable is set to the correct GPIO number on your Raspberry Pi (not the pin number itself). For example, I use GPIO #14 but on the Raspberry Pi it's pin #7.
