@@ -38,12 +38,12 @@ if os.path.isfile(fullFilePath):
     with open(fullFilePath,mode='a') as f:
         if humidity is not None and temp is not None:
             f.write(f"{initHour}:{initMins}:{initSecs},{temp:.1f},{humidity:.1f}\n")
-            if IFTTT_SERVICE == '1' or IFTTT_SERVICE == 'TRUE' and temp >= WARNING_TEMP:
+            if (IFTTT_SERVICE == '1' or IFTTT_SERVICE == 'TRUE') and temp >= WARNING_TEMP:
                 sendAlert()
 else:
     with open(fullFilePath,mode='a') as f:
         if humidity is not None and temp is not None:
             f.write("time,temperature,humidity\n")
             f.write(f"{initHour}:{initMins}:{initSecs},{temp:.1f},{humidity:.1f}\n")
-            if IFTTT_SERVICE == '1' or IFTTT_SERVICE == 'TRUE' and temp >= WARNING_TEMP:
+            if (IFTTT_SERVICE == '1' or IFTTT_SERVICE == 'TRUE') and temp >= WARNING_TEMP:
                 sendAlert()
