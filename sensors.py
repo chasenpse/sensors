@@ -20,6 +20,12 @@ DHT_PIN = 14
 
 humidity, temp = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
 
-with open(fullFilePath,mode='a') as f:
-    if humidity is not None and temp is not None:
-        f.write(f"{initHour}:{initMins}:{initSecs},{(temp * 9/5) + 32:.1f},{humidity:.1f}\n")
+if os.path.isfile(fullFilePath):
+    with open(fullFilePath,mode='a') as f:
+        if humidity is not None and temp is not None:
+            f.write(f"{initHour}:{initMins}:{initSecs},{(temp * 9/5) + 32:.1f},{humidity:.1f}\n")
+else:
+    with open(fullFilePath,mode='a') as f:
+        if humidity is not None and temp is not None:
+            f.write("time,temperature,humidity\n")
+            f.write(f"{initHour}:{initMins}:{initSecs},{(temp * 9/5) + 32:.1f},{humidity:.1f}\n")
