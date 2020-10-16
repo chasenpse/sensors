@@ -11,7 +11,7 @@ initDay = "%02d" % (d.day)
 initHour = "%02d" % (d.hour)
 initMins = "%02d" % (d.minute)
 initSecs = "%02d" % (d.second)
-fullFilePath = f"{os.path.dirname(os.path.realpath(__file__))}/log/{initYear}{initMonth}{initDay}.log"
+fullFilePath = f"{os.path.dirname(os.path.realpath(__file__))}/log/{initYear}{initMonth}{initDay}.csv"
 
 DHT_SENSOR = Adafruit_DHT.DHT22
 
@@ -22,4 +22,4 @@ humidity, temp = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
 
 with open(fullFilePath,mode='a') as f:
     if humidity is not None and temp is not None:
-        f.write(f"[{initHour}:{initMins}:{initSecs}] *** Temp={(temp * 9/5) + 32:.1f} Humidity={humidity:.1f}\n")
+        f.write(f"{initHour}:{initMins}:{initSecs},{(temp * 9/5) + 32:.1f},{humidity:.1f}\n")
