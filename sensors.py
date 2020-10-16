@@ -7,7 +7,7 @@ from configparser import ConfigParser
 import requests
 
 config = ConfigParser()
-config.read('config.ini')
+config.read(f"{os.path.dirname(os.path.realpath(__file__))}/config.ini")
 
 d = datetime.now()
 initYear = "%04d" % (d.year)
