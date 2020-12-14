@@ -1,0 +1,30 @@
+button {
+    box-sizing: border-box;
+    padding:0 10px;
+    width:140px;
+    height:32px;
+    font-size:0.8em;
+    background:#000;
+    color:#FFF;
+    border: 1px solid #FFF;
+    border-radius:4px;
+    text-align: center;
+    cursor: pointer;
+    margin-right:20px;
+}
+
+button:last-of-type {
+    margin-right:60px;
+}
+
+.on {
+    background:#FFF;
+    color:#000;
+    border: 0;
+}
+
+@media screen and (max-width: 1230px) {
+    button:last-of-type {
+        margin-right:50px;
+    }
+}

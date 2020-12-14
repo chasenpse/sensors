@@ -1,0 +1,10 @@
+.title {
+    margin-right:40px;
+}
+
+.title h1 {
+    font-size:3em;
+}
+.title h1 span {
+    font-weight:bold;
+}

@@ -16,7 +16,7 @@ initDay = "%02d" % (d.day)
 initHour = "%02d" % (d.hour)
 initMins = "%02d" % (d.minute)
 initSecs = "%02d" % (d.second)
-fullFilePath = f"{os.path.dirname(os.path.realpath(__file__))}/log/{initYear}-{initMonth}-{initDay}.csv"
+fullFilePath = f"{os.path.dirname(os.path.realpath(__file__))}/data/{initYear}-{initMonth}-{initDay}.csv"
 
 DHT_SENSOR = Adafruit_DHT.DHT22
 DHT_PIN = int(config.get('general','DHT_PIN'))

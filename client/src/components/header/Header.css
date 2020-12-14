@@ -1,0 +1,13 @@
+.header {
+    box-sizing: border-box;
+    width:100%;
+    padding:10px 20px 20px 20px;
+    line-height:64px;
+    display:flex;
+    justify-content: space-between;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:50;
+    background: rgba(0,0,0,0.7);
+}
