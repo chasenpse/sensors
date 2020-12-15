@@ -14,13 +14,12 @@ const LineChart = () => {
     const [
         tempToggle, setTempToggle,
         humidityToggle, setHumidityToggle,
-        startDate, setStartDate,
-        endDate, setEndDate
     ] = useContext(ControlsContext);
 
     const [data, setData] = useState(null);
     const [width, setWidth] = useState(+window.innerWidth);
     const [height, setHeight] = useState(+window.innerHeight/2);
+    const [yAxisLabel, setyAxisLabel] = useState('Temperature °F / Humidity %');
 
     const margin = { top: 20, right: 50, bottom: 65, left: 90 };
     const innerWidth = width - margin.left - margin.right;
@@ -31,7 +30,6 @@ const LineChart = () => {
     const xAxisLabel = 'Time';
     const y1Value = d => d.temperature;
     const y2Value = d => d.humidity;
-    const yAxisLabel = 'Temperature °F';
     const xAxisTickFormat = timeFormat('%H:%M');
 
     useEffect(() => {
@@ -63,9 +61,43 @@ const LineChart = () => {
         .nice();
 
     const yScale = scaleLinear()
-        .domain(extent(data, y2Value))
+        .domain(extent(data, humidityToggle ? y2Value : y1Value))
         .range([innerHeight, 0])
         .nice();
+
+    const tempData = () => {
+        if (tempToggle) {
+            return (
+                    <Marks
+                        data={data}
+                        xScale={xScale}
+                        yScale={yScale}
+                        xValue={xValue}
+                        yValue={y1Value}
+                        tooltipFormat={xAxisTickFormat}
+                        circleRadius={3}
+                        type={"temp"}
+                    />
+            )
+        }
+    };
+
+    const humidityData = () => {
+        if (humidityToggle) {
+            return (
+                <Marks
+                    data={data}
+                    xScale={xScale}
+                    yScale={yScale}
+                    xValue={xValue}
+                    yValue={y2Value}
+                    tooltipFormat={xAxisTickFormat}
+                    circleRadius={3}
+                    type={"humidity"}
+                />
+            )
+        }
+    };
 
     return (
         <div className={"svgContainer"}>
@@ -94,26 +126,8 @@ const LineChart = () => {
                     >
                         {yAxisLabel}
                     </text>
-                    <Marks
-                        data={data}
-                        xScale={xScale}
-                        yScale={yScale}
-                        xValue={xValue}
-                        yValue={y2Value}
-                        tooltipFormat={xAxisTickFormat}
-                        circleRadius={3}
-                        type={"humidity"}
-                    />
-                    <Marks
-                        data={data}
-                        xScale={xScale}
-                        yScale={yScale}
-                        xValue={xValue}
-                        yValue={y1Value}
-                        tooltipFormat={xAxisTickFormat}
-                        circleRadius={3}
-                        type={"temp"}
-                    />
+                    {humidityData()}
+                    {tempData()}
                 </g>
             </svg>
         </div>

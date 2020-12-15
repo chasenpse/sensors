@@ -5,7 +5,7 @@ export  const ControlsContext = createContext();
 
 export const ControlsProvider = props => {
     const [tempToggle, setTempToggle] = useState(true);
-    const [humidityToggle, setHumidityToggle] = useState(false);
+    const [humidityToggle, setHumidityToggle] = useState(true);
     const [startDate, setStartDate] = useState(defaultStartDate);
     const [endDate, setEndDate] = useState(getDate);
     return (
