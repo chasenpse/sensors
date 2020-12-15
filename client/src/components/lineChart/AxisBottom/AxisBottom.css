@@ -1,0 +1,6 @@
+.line.bottom {
+    stroke: rgba(255,255,255,0.1);
+}
+.tick.bottom {
+    fill:#FFF;
+}

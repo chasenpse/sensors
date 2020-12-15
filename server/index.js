@@ -36,10 +36,10 @@ app.get('/', (req,res)=> {
 
     const csv = new Promise((resolve, reject) => {
         const csvData = [];
-        fs.createReadStream(__dirname + '/data/2020-12-02.csv')
+        fs.createReadStream(__dirname + '/../data/2020-12-02.csv')
             .pipe(parse({columns: true}))
             .on('data',(row)=>{
-                csvData.push({...row, time: `2020-12-02T${row.time}.000Z`});
+                csvData.push({...row, time: `2020-12-02T${row.time}`});
             })
             .on('end', () => {
                 resolve(csvData);

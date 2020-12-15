@@ -1,18 +1,16 @@
-/*red: 255,51,65 / #FF3341*/
-/*green:105,189,69 / #69BD45*/
-/*blue: 0,153,255 / #0099FF*/
-/*purple: 0,153,255 / #CA5ACA*/
-
 .loading {
     text-align: center;
-    font-size:5em;
+    font-size:3em;
     padding:25vh 0;
-    background: #FF3341;
 }
 
-svg {
+.svgContainer {
     width:100%;
     height:50vh;
+    text-align:center;
+}
+svg {
+    background:none;
 }
 
 text {
