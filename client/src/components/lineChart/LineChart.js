@@ -7,19 +7,19 @@ import {AxisLeft} from "./AxisLeft/AxisLeft";
 import {Marks} from "./Marks/Marks";
 import { ControlsContext} from "../header/controls/ControlsContext";
 
-
-const url = 'http://localhost:5000/';
-
 const LineChart = () => {
     const [
-        tempToggle, setTempToggle,
-        humidityToggle, setHumidityToggle,
+        tempToggle,,
+        humidityToggle,,
+        startDate,,
+        endDate,
     ] = useContext(ControlsContext);
 
     const [data, setData] = useState(null);
     const [width, setWidth] = useState(+window.innerWidth);
     const [height, setHeight] = useState(+window.innerHeight/2);
     const [yAxisLabel, setyAxisLabel] = useState('Temperature °F / Humidity %');
+    const [xAxisTickFormat, setXAxisTickFormat] = useState('%m/%d');
 
     const margin = { top: 20, right: 50, bottom: 65, left: 90 };
     const innerWidth = width - margin.left - margin.right;
@@ -30,7 +30,20 @@ const LineChart = () => {
     const xAxisLabel = 'Time';
     const y1Value = d => d.temperature;
     const y2Value = d => d.humidity;
-    const xAxisTickFormat = timeFormat('%H:%M');
+
+    const setXTicks = (d) => {
+        if (d<3) {
+            return '%H:%M';
+        } else if (d>=3 && d<32) {
+            return '%b %d';
+        } else if (d>>=32 && d<61) {
+            return '%b %d';
+        } else if (d>=61) {
+            return '%b';
+        } else {
+            return '%H:%M';
+        }
+    }
 
     useEffect(() => {
         window.addEventListener("resize", ()=>{
@@ -40,6 +53,7 @@ const LineChart = () => {
     }, []);
 
     useEffect(() => {
+        const url = `http://localhost:5000/?startdate=${startDate}&enddate=${endDate}`;
         axios.get(url)
             .then((res) => {
                 const data = res.data.map(d => {
@@ -49,9 +63,10 @@ const LineChart = () => {
                         humidity: +d.humidity
                     })
                 })
+                setXAxisTickFormat(setXTicks(Math.ceil(data.length / 1440))); // 1440 minutes = 1 day
                 setData(data);
             })
-    }, []);
+    }, [startDate, endDate]);
 
     if (!data) return (<div className={"loading"}>Loading...</div>);
 
@@ -60,22 +75,36 @@ const LineChart = () => {
         .range([0, innerWidth])
         .nice();
 
-    const yScale = scaleLinear()
-        .domain(extent(data, humidityToggle ? y2Value : y1Value))
-        .range([innerHeight, 0])
-        .nice();
+    const yScale = () => {
+        const fullDataSet = [].concat(
+            data.map(d=>y1Value(d)),
+            data.map(d=>y2Value(d)),
+        )
+        if (humidityToggle && tempToggle) {
+            return scaleLinear()
+                .domain(extent(fullDataSet))
+                .range([innerHeight, 0])
+                .nice();
+        } else if (humidityToggle && !tempToggle) {
+            return scaleLinear()
+                .domain(extent(data, y2Value))
+                .range([innerHeight, 0])
+                .nice();
+        }
+        return scaleLinear()
+            .domain(extent(data, y1Value))
+            .range([innerHeight, 0])
+            .nice();
+    }
+
 
     const tempData = () => {
         if (tempToggle) {
             return (
                     <Marks
                         data={data}
-                        xScale={xScale}
-                        yScale={yScale}
-                        xValue={xValue}
-                        yValue={y1Value}
-                        tooltipFormat={xAxisTickFormat}
-                        circleRadius={3}
+                        xScale={xScale} yScale={yScale()}
+                        xValue={xValue} yValue={y1Value}
                         type={"temp"}
                     />
             )
@@ -87,12 +116,8 @@ const LineChart = () => {
             return (
                 <Marks
                     data={data}
-                    xScale={xScale}
-                    yScale={yScale}
-                    xValue={xValue}
-                    yValue={y2Value}
-                    tooltipFormat={xAxisTickFormat}
-                    circleRadius={3}
+                    xScale={xScale} yScale={yScale()}
+                    xValue={xValue} yValue={y2Value}
                     type={"humidity"}
                 />
             )
@@ -106,23 +131,21 @@ const LineChart = () => {
                     <AxisBottom
                         xScale={xScale}
                         innerHeight={innerHeight}
-                        tickFormat={xAxisTickFormat}
+                        tickFormat={timeFormat(xAxisTickFormat)}
                         tickOffset={25}
                     />
                     <text
                         className="axis-label"
-                        x={innerWidth / 2}
-                        y={innerHeight + xAxisLabelOffset}
+                        x={innerWidth / 2} y={innerHeight + xAxisLabelOffset}
                         textAnchor="middle"
                     >
                         {xAxisLabel}
                     </text>
-                    <AxisLeft yScale={yScale} innerWidth={innerWidth} tickOffset={5} />
+                    <AxisLeft yScale={yScale()} innerWidth={innerWidth} tickOffset={5} />
                     <text
                         className="axis-label"
                         textAnchor="middle"
-                        transform={`translate(${-yAxisLabelOffset},${innerHeight /
-                        2}) rotate(-90)`}
+                        transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}
                     >
                         {yAxisLabel}
                     </text>

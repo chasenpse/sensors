@@ -23,7 +23,7 @@ const Controls = () => {
                 label={"Humidity"}
                 handler={setHumidityToggle}
             />
-            Range:<DateInput value={startDate} handler={setStartDate} />-<DateInput value={endDate} min={startDate} handler={setEndDate} />
+            Range:<DateInput value={startDate} min={"2020-10-15"} handler={setStartDate} />-<DateInput value={endDate} min={startDate} handler={setEndDate} />
         </div>
     )
 }

@@ -12,8 +12,8 @@ app.get('/', (req,res)=> {
 
     const today = new Date();
     const yyyy = today.getFullYear();
-    const mm = today.getMonth() + 1; // jan is 0
-    const dd = today.getDate();
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); //jan is 0
+    const dd = String(today.getDate()).padStart(2, '0');
 
     // util func checks $s against `yyyy-mm-dd` regex
     const validate = (s) => {
@@ -28,27 +28,35 @@ app.get('/', (req,res)=> {
         new Date(req.query.enddate) :
         new Date([yyyy,mm,dd].join('-'));
 
-    console.log(startDate, endDate);
-
+    const fileArr = [];
     for (let n=startDate;n<=endDate;n.setDate(n.getDate()+1)) {
-        console.log(`${n.getFullYear()}-${n.getMonth()+1}-${n.getDate()}`);
+        fileArr.push(`${n.getUTCFullYear()}-${String(n.getUTCMonth() + 1).padStart(2, '0')}-${String(n.getUTCDate()).padStart(2, '0')}`);
     }
 
-    const csv = new Promise((resolve, reject) => {
-        const csvData = [];
-        fs.createReadStream(__dirname + '/../data/2020-12-02.csv')
-            .pipe(parse({columns: true}))
-            .on('data',(row)=>{
-                csvData.push({...row, time: `2020-12-02T${row.time}`});
-            })
-            .on('end', () => {
-                resolve(csvData);
-            })
-            .on('error', (e) => { reject(e)})
+    const promiseReadStream = (filePath) => {
+        return new Promise((resolve,reject) => {
+            const data = [];
+            fs.createReadStream(__dirname + '/../data/' + filePath + '.csv', {encoding: 'utf-8'})
+                .pipe(parse({columns: true}))
+                .on('data',(row)=>{
+                    if (row.humidity <= 100) {data.push({...row, time: `${filePath}T${row.time}`})}
+                })
+                .on('finish', ()=>resolve(data))
+                .on('error', (e)=> {
+                    reject(e);
+                })
+        })
+    }
+
+    const promises = fileArr.map(f => {
+        return promiseReadStream(f);
     })
-    csv.then((data)=> {
-        res.status(200).send(data);
-    });
+
+    Promise.all(promises)
+        .then(dataArr => {
+            res.status(200).send(dataArr.flat());
+        })
 })
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT);
