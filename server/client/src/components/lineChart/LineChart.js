@@ -17,7 +17,7 @@ const LineChart = () => {
 
     const [data, setData] = useState(null);
     const [width, setWidth] = useState(+window.innerWidth);
-    const [height, setHeight] = useState(+window.innerHeight/2);
+    const [height, setHeight] = useState(+window.innerHeight * .6);
     const [yAxisLabel, setyAxisLabel] = useState('Temperature °F / Humidity %');
     const [xAxisTickFormat, setXAxisTickFormat] = useState('%m/%d');
 
@@ -44,16 +44,19 @@ const LineChart = () => {
             return '%H:%M';
         }
     }
+    process.env.REACT_APP_NODE_PORT = 5000;
+    console.log(process.env.NODE_ENV);
+    console.log(process.env.REACT_APP_NODE_PORT);
 
     useEffect(() => {
         window.addEventListener("resize", ()=>{
             setWidth(+window.innerWidth);
-            setHeight(+window.innerHeight/2);
+            setHeight(+window.innerHeight * .6);
         });
     }, []);
 
     useEffect(() => {
-        const url = `http://localhost:5000/?startdate=${startDate}&enddate=${endDate}`;
+        const url = `http://172.30.1.15:5000/q?startdate=${startDate}&enddate=${endDate}`;
         axios.get(url)
             .then((res) => {
                 const data = res.data.map(d => {
@@ -125,35 +128,33 @@ const LineChart = () => {
     };
 
     return (
-        <div className={"svgContainer"}>
-            <svg width={width} height={height}>
-                <g transform={`translate(${margin.left},${margin.top})`}>
-                    <AxisBottom
-                        xScale={xScale}
-                        innerHeight={innerHeight}
-                        tickFormat={timeFormat(xAxisTickFormat)}
-                        tickOffset={25}
-                    />
-                    <text
-                        className="axis-label"
-                        x={innerWidth / 2} y={innerHeight + xAxisLabelOffset}
-                        textAnchor="middle"
-                    >
-                        {xAxisLabel}
-                    </text>
-                    <AxisLeft yScale={yScale()} innerWidth={innerWidth} tickOffset={5} />
-                    <text
-                        className="axis-label"
-                        textAnchor="middle"
-                        transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}
-                    >
-                        {yAxisLabel}
-                    </text>
-                    {humidityData()}
-                    {tempData()}
-                </g>
-            </svg>
-        </div>
+        <svg width={width} height={height}>
+            <g transform={`translate(${margin.left},${margin.top})`}>
+                <AxisBottom
+                    xScale={xScale}
+                    innerHeight={innerHeight}
+                    tickFormat={timeFormat(xAxisTickFormat)}
+                    tickOffset={25}
+                />
+                <text
+                    className="axis-label"
+                    x={innerWidth / 2} y={innerHeight + xAxisLabelOffset}
+                    textAnchor="middle"
+                >
+                    {xAxisLabel}
+                </text>
+                <AxisLeft yScale={yScale()} innerWidth={innerWidth} tickOffset={5} />
+                <text
+                    className="axis-label"
+                    textAnchor="middle"
+                    transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}
+                >
+                    {yAxisLabel}
+                </text>
+                {humidityData()}
+                {tempData()}
+            </g>
+        </svg>
     )
 }
 

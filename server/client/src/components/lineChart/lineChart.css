@@ -3,14 +3,10 @@
     font-size:3em;
     padding:25vh 0;
 }
-
-.svgContainer {
-    width:100%;
-    height:50vh;
-    text-align:center;
-}
 svg {
     background:none;
+    width:100%;
+    text-align:center;
 }
 
 text {

@@ -1,0 +1,8 @@
+.dateRange {
+    display:inline-block;
+}
+@media screen and (max-width: 1020px) {
+    .dateRange {
+        display:block;
+    }
+}

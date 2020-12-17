@@ -1,3 +1,4 @@
+import './Controls.css';
 import React, { useContext } from 'react';
 import ToggleButton from "./toggleButton/ToggleButton";
 import DateInput from "./dateInput/DateInput";
@@ -23,7 +24,9 @@ const Controls = () => {
                 label={"Humidity"}
                 handler={setHumidityToggle}
             />
-            Range:<DateInput value={startDate} min={"2020-10-15"} handler={setStartDate} />-<DateInput value={endDate} min={startDate} handler={setEndDate} />
+            <div className={"dateRange"}>
+                Range:<DateInput value={startDate} min={"2020-10-15"} handler={setStartDate} />-<DateInput value={endDate} min={startDate} handler={setEndDate} />
+            </div>
         </div>
     )
 }

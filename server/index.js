@@ -7,8 +7,9 @@ const cors = require('cors');
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+const PORT = process.env.PORT || 5000;
 
-app.get('/', (req,res)=> {
+app.get('/q', (req,res)=> {
 
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -34,6 +35,7 @@ app.get('/', (req,res)=> {
     }
 
     const promiseReadStream = (filePath) => {
+        const path = require('path');
         return new Promise((resolve,reject) => {
             const data = [];
             fs.createReadStream(__dirname + '/../data/' + filePath + '.csv', {encoding: 'utf-8'})
@@ -57,6 +59,10 @@ app.get('/', (req,res)=> {
             res.status(200).send(dataArr.flat());
         })
 })
-const PORT = process.env.PORT || 5000;
+
+if (process.env.NODE_ENV === 'production') {
+    // serve prod assets out of client/build
+    app.use(express.static('client/build'));
+}
 
 app.listen(PORT);
