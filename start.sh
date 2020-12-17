@@ -1,3 +1,3 @@
 #!/bin/bash
-. /home/myapp/.nvm/nvm.sh
+. /home/pi/.nvm/nvm.sh
 npm start --prefix server

@@ -1,5 +1,5 @@
 [Unit]
-Description=D3/React Sensors Server
+Description=rPi Sensors Server
 
 [Service]
 ExecStart=/home/pi/sensors/start.sh
@@ -8,6 +8,7 @@ Restart=always
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=sensors
+KillMode=control-group
 User=pi
 Environment=NODE_ENV=production
 
