@@ -44,9 +44,6 @@ const LineChart = () => {
             return '%H:%M';
         }
     }
-    process.env.REACT_APP_NODE_PORT = 5000;
-    console.log(process.env.NODE_ENV);
-    console.log(process.env.REACT_APP_NODE_PORT);
 
     useEffect(() => {
         window.addEventListener("resize", ()=>{
@@ -56,7 +53,7 @@ const LineChart = () => {
     }, []);
 
     useEffect(() => {
-        const url = `http://172.30.1.15:5000/q?startdate=${startDate}&enddate=${endDate}`;
+        const url = `/q?startdate=${startDate}&enddate=${endDate}`;
         axios.get(url)
             .then((res) => {
                 const data = res.data.map(d => {
