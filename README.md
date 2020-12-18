@@ -78,3 +78,5 @@ systemctl start rpisensors
 To check that the service started properly run `systemctl status rpisensors`.
 
 And that's it! You can now view the frontend by navigating to your rPi's IP address on port `5000` (or whichever port is defined in your `PORT` environment variable).
+
+Special thanks to [joepie91](https://github.com/joepie91) for their guide on [running a Node.js application using nvm as a systemd service](https://gist.github.com/joepie91/73ce30dd258296bd24af23e9c5f761aa)!
