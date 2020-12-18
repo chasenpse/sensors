@@ -35,18 +35,19 @@ app.get('/q', (req,res)=> {
     }
 
     const promiseReadStream = (filePath) => {
-        const path = require('path');
         return new Promise((resolve,reject) => {
             const data = [];
             fs.createReadStream(__dirname + '/../data/' + filePath + '.csv', {encoding: 'utf-8'})
-                .pipe(parse({columns: true}))
-                .on('data',(row)=>{
-                    if (row.humidity <= 100) {data.push({...row, time: `${filePath}T${row.time}`})}
-                })
-                .on('finish', ()=>resolve(data))
-                .on('error', (e)=> {
+                .on('error', (e) => {
                     reject(e);
                 })
+                .pipe(parse({columns: true}))
+                .on('data', (row) => {
+                    if (row.humidity <= 100) {
+                        data.push({...row, time: `${filePath}T${row.time}`})
+                    }
+                })
+                .on('finish', () => resolve(data));
         })
     }
 
@@ -58,6 +59,9 @@ app.get('/q', (req,res)=> {
         .then(dataArr => {
             res.status(200).send(dataArr.flat());
         })
+        .catch(e => {
+            console.log(e);
+    });
 })
 
 if (process.env.NODE_ENV === 'production') {
