@@ -11,3 +11,16 @@
     z-index:50;
     background: rgba(0,0,0,0.7);
 }
+
+@media screen and (max-width: 1020px) {
+    .header {
+        padding:10px;
+        line-height:42px;
+    }
+}
+
+@media screen and (max-width: 760px) {
+    .header {
+        display:block;
+    }
+}

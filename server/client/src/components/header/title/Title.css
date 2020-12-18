@@ -1,10 +1,25 @@
 .title {
     margin-right:40px;
 }
-
 .title h1 {
     font-size:3em;
 }
 .title h1 span {
     font-weight:bold;
+}
+
+@media screen and (max-width: 1020px) {
+    .title {
+        margin-right:0;
+    }
+    .title h1 {
+        font-size:2em;
+    }
+}
+
+@media screen and (max-width: 760px) {
+    .title {
+        display:block;
+        text-align: center;
+    }
 }

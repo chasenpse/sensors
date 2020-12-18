@@ -24,8 +24,8 @@ const Controls = () => {
                 label={"Humidity"}
                 handler={setHumidityToggle}
             />
-            <div className={"dateRange"}>
-                Range:<DateInput value={startDate} min={"2020-10-15"} handler={setStartDate} />-<DateInput value={endDate} min={startDate} handler={setEndDate} />
+            <div className={"dateRangeContainer"}>
+                <span className={"rangeLabel"}>Range:</span><DateInput value={startDate} min={"2020-10-15"} handler={setStartDate} />-<DateInput value={endDate} min={startDate} handler={setEndDate} />
             </div>
         </div>
     )

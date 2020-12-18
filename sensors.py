@@ -15,7 +15,6 @@ initMonth = "%02d" % (d.month)
 initDay = "%02d" % (d.day)
 initHour = "%02d" % (d.hour)
 initMins = "%02d" % (d.minute)
-initSecs = "%02d" % (d.second)
 fullFilePath = f"{os.path.dirname(os.path.realpath(__file__))}/data/{initYear}-{initMonth}-{initDay}.csv"
 
 DHT_SENSOR = Adafruit_DHT.DHT22
@@ -37,13 +36,13 @@ if UNITS == 'F':
 if os.path.isfile(fullFilePath):
     with open(fullFilePath,mode='a') as f:
         if humidity is not None and temp is not None:
-            f.write(f"{initHour}:{initMins}:{initSecs},{temp:.1f},{humidity:.1f}\n")
+            f.write(f"{initHour}:{initMins}:00,{temp:.1f},{humidity:.1f}\n")
             if (IFTTT_SERVICE == '1' or IFTTT_SERVICE == 'TRUE') and temp >= WARNING_TEMP:
                 sendAlert()
 else:
     with open(fullFilePath,mode='a') as f:
         if humidity is not None and temp is not None:
             f.write("time,temperature,humidity\n")
-            f.write(f"{initHour}:{initMins}:{initSecs},{temp:.1f},{humidity:.1f}\n")
+            f.write(f"{initHour}:{initMins}:00,{temp:.1f},{humidity:.1f}\n")
             if (IFTTT_SERVICE == '1' or IFTTT_SERVICE == 'TRUE') and temp >= WARNING_TEMP:
                 sendAlert()

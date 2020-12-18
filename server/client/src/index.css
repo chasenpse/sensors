@@ -58,3 +58,9 @@ body {
 html, body, table, td, tr, th, span, div, input, textarea, button {
     font-family: zeitung-mono, sans-serif;
 }
+
+@media screen and (max-width: 1020px) {
+    body {
+        margin-top: 165px;
+    }
+}

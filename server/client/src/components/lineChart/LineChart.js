@@ -18,7 +18,6 @@ const LineChart = () => {
     const [data, setData] = useState(null);
     const [width, setWidth] = useState(+window.innerWidth);
     const [height, setHeight] = useState(+window.innerHeight * .6);
-    const [yAxisLabel, setyAxisLabel] = useState('Temperature °F / Humidity %');
     const [xAxisTickFormat, setXAxisTickFormat] = useState('%m/%d');
 
     const margin = { top: 20, right: 50, bottom: 65, left: 90 };
@@ -124,6 +123,18 @@ const LineChart = () => {
         }
     };
 
+    const setYLabel = (yAxisLabel) => {
+        if (tempToggle && humidityToggle) {
+            return 'Temperature °F / Humidity %';
+        } else if (tempToggle) {
+            return 'Temperature °F';
+        } else if (humidityToggle) {
+            return 'Humidity %';
+        } else {
+            return '';
+        }
+    }
+
     return (
         <svg width={width} height={height}>
             <g transform={`translate(${margin.left},${margin.top})`}>
@@ -141,13 +152,15 @@ const LineChart = () => {
                     {xAxisLabel}
                 </text>
                 <AxisLeft yScale={yScale()} innerWidth={innerWidth} tickOffset={5} />
-                <text
-                    className="axis-label"
-                    textAnchor="middle"
-                    transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}
-                >
-                    {yAxisLabel}
-                </text>
+                <g transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}>
+                    <text
+                        className="axis-label"
+                        textAnchor="middle"
+                    >
+                        {setYLabel()}
+                    </text>
+                </g>
+
                 {humidityData()}
                 {tempData()}
             </g>

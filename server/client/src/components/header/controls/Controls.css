@@ -1,8 +1,13 @@
-.dateRange {
+.dateRangeContainer {
     display:inline-block;
 }
-@media screen and (max-width: 1020px) {
-    .dateRange {
+
+@media screen and (max-width: 760px) {
+    .controls {
+        display:block;
+        text-align:center;
+    }
+    .dateRangeContainer {
         display:block;
     }
 }
