@@ -35,7 +35,7 @@ const LineChart = () => {
             return '%H:%M';
         } else if (d>=3 && d<32) {
             return '%b %d';
-        } else if (d>>=32 && d<61) {
+        } else if (d>=32 && d<61) {
             return '%b %d';
         } else if (d>=61) {
             return '%b';
@@ -52,6 +52,7 @@ const LineChart = () => {
     }, []);
 
     useEffect(() => {
+        setData(null);
         const url = `/q?startdate=${startDate}&enddate=${endDate}`;
         axios.get(url)
             .then((res) => {
@@ -65,9 +66,12 @@ const LineChart = () => {
                 setXAxisTickFormat(setXTicks(Math.ceil(data.length / 1440))); // 1440 minutes = 1 day
                 setData(data);
             })
+            .catch(e=>setData("error"));
     }, [startDate, endDate]);
 
     if (!data) return (<div className={"loading"}>Loading...</div>);
+
+    if (data === 'error') return (<div className={"loading"}>an error?! (ノ°Д°）ノ︵ ┻━┻</div>);
 
     const xScale = scaleTime()
         .domain(extent(data, xValue))
