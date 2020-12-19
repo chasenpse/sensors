@@ -2,6 +2,8 @@
 
 This app was created for logging and visualizing temperature and humidity data using a Raspberry Pi and a DHT22 module. It also features an optional IFTTT notification for high temperature alerts, which can be defined in the script config.
 
+![Frontend screenshot](screenshot.png)
+
 ## Hardware Requirements
 
 - Raspberry Pi (3B or better recommended)
