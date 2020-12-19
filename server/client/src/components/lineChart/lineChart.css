@@ -3,6 +3,12 @@
     font-size:3em;
     padding:25vh 0;
 }
+.error {
+    text-align: center;
+    font-size:3em;
+    line-height:2em;
+    padding:20vh 0;
+}
 svg {
     background:none;
     width:100%;

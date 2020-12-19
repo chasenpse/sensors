@@ -70,8 +70,10 @@ const LineChart = () => {
     }, [startDate, endDate]);
 
     if (!data) return (<div className={"loading"}>Loading...</div>);
-
-    if (data === 'error') return (<div className={"loading"}>an error?! (ノ°Д°）ノ︵ ┻━┻</div>);
+    if (data === 'error') return (<div className={"error"}>
+        bad date range?!<br />
+        (ノ°Д°）ノ︵ ┻━┻
+    </div>);
 
     const xScale = scaleTime()
         .domain(extent(data, xValue))
