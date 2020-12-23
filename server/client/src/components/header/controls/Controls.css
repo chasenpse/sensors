@@ -2,12 +2,13 @@
     display:inline-block;
 }
 
-@media screen and (max-width: 760px) {
+@media screen and (max-width: 1020px) {
     .controls {
         display:block;
         text-align:center;
     }
     .dateRangeContainer {
         display:block;
+        margin-top:1em;
     }
 }

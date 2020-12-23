@@ -9,11 +9,11 @@ button {
     border-radius:4px;
     text-align: center;
     cursor: pointer;
-    margin-right:20px;
+    margin-right:1em;
 }
 
 button:last-of-type {
-    margin-right:60px;
+    margin-right:3em;
 }
 
 .on {
@@ -24,7 +24,7 @@ button:last-of-type {
 
 @media screen and (max-width: 1230px) {
     button:last-of-type {
-        margin-right:45px;
+        margin-right:1em;
     }
 }
 
@@ -33,17 +33,7 @@ button:last-of-type {
         display:none;
     }
     button {
-        margin-right:10px;
-        width:120px;
-    }
-    button:last-of-type {
-        margin-right:15px;
-    }
-}
-
-@media screen and (max-width: 760px) {
-    button {
-        margin-right:20px;
+        margin-right:1em;
         width:140px;
     }
     button:last-of-type {

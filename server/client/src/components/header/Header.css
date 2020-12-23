@@ -1,8 +1,7 @@
 .header {
     box-sizing: border-box;
     width:100%;
-    padding:10px 20px 20px 20px;
-    line-height:64px;
+    padding:10px 20px;
     display:flex;
     justify-content: space-between;
     position:fixed;
@@ -14,13 +13,7 @@
 
 @media screen and (max-width: 1020px) {
     .header {
-        padding:10px;
-        line-height:42px;
-    }
-}
-
-@media screen and (max-width: 760px) {
-    .header {
         display:block;
+        padding:10px;
     }
 }
