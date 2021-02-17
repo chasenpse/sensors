@@ -5,15 +5,10 @@ import {scaleLinear, scaleTime, timeFormat, extent} from 'd3';
 import {AxisBottom} from "./AxisBottom/AxisBottom";
 import {AxisLeft} from "./AxisLeft/AxisLeft";
 import {Marks} from "./Marks/Marks";
-import { ControlsContext} from "../header/controls/ControlsContext";
+import { ControlsContext } from "../header/controls/ControlsContext";
 
 const LineChart = () => {
-    const [
-        tempToggle,,
-        humidityToggle,,
-        startDate,,
-        endDate,
-    ] = useContext(ControlsContext);
+    const {tempToggle, humidityToggle, startDate, endDate} = useContext(ControlsContext);
 
     const [data, setData] = useState(null);
     const [width, setWidth] = useState(+window.innerWidth);
@@ -101,7 +96,6 @@ const LineChart = () => {
             .range([innerHeight, 0])
             .nice();
     }
-
 
     const tempData = () => {
         if (tempToggle) {

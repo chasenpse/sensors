@@ -5,12 +5,12 @@ import DateInput from "./dateInput/DateInput";
 import { ControlsContext } from "./ControlsContext";
 
 const Controls = () => {
-    const [
+    const {
         tempToggle, setTempToggle,
         humidityToggle, setHumidityToggle,
         startDate, setStartDate,
         endDate, setEndDate
-    ] = useContext(ControlsContext);
+    } = useContext(ControlsContext);
 
     return (
         <div className={"controls"}>
