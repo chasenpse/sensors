@@ -1,7 +1,7 @@
 import React from 'react';
 import './Header.css';
-import Title from "./title/Title";
-import Controls from "./controls/Controls";
+import Title from "./Title/Title";
+import Controls from "./Controls/Controls";
 import { hostname } from 'os';
 
 const title = <h1>{hostname()}</h1>;

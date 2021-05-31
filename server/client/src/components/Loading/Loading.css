@@ -1,0 +1,10 @@
+.loading {
+    text-align: center;
+    font-size:2em;
+    margin-top:200px;
+}
+@media screen and (max-width: 760px) {
+    .loading {
+        font-size: 1.5em;
+    }
+}

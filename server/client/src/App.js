@@ -1,19 +1,15 @@
 import React from 'react';
-import Header from "./components/header/Header";
-import Footer from "./components/footer/Footer";
-import LineChart from "./components/lineChart/LineChart";
-import { ControlsProvider } from './components/header/controls/ControlsContext';
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
+import Graphs from "./components/Graphs/Graphs";
 
 const App = () => {
-
     return (
-        <ControlsProvider>
-            <div className={"App"}>
-                <Header />
-                <LineChart />
-                <Footer />
-            </div>
-        </ControlsProvider>
+        <div className={"App"}>
+            <Header />
+            <Graphs />
+            <Footer />
+        </div>
     );
 }
 
