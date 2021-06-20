@@ -1,10 +1,10 @@
 import React from 'react';
 import './Title.css';
 
-function Title({value}) {
+function Title({children}) {
     return (
         <div className={"title"}>
-            {value}
+            <h1>{children}</h1>
         </div>
     )
 }

@@ -3,11 +3,16 @@ const fs = require('fs');
 const parse = require('csv-parse');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const os = require('os');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 const PORT = process.env.PORT || 5000;
+
+app.get('/host', (req,res)=> {
+    res.status(200).json({host:os.hostname()})
+})
 
 app.get('/q', (req,res)=> {
 

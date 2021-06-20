@@ -1,15 +1,24 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './Header.css';
 import Title from "./Title/Title";
 import Controls from "./Controls/Controls";
 import { hostname } from 'os';
-
-const title = <h1>{hostname()}</h1>;
+import axios from "axios";
 
 const Header = () => {
+    const [loading, setLoading] = useState(true)
+    const [host,setHost] = useState(null)
+
+    useEffect(()=> {
+        axios.get(`/host`)
+            .then((res) => {
+                setHost(res.data.host)
+            })
+    }, [])
+
     return (
         <header className={"header"}>
-            <Title value={title} />
+            <Title>{host}</Title>
             <Controls />
         </header>
     );
