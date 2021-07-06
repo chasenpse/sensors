@@ -15,20 +15,25 @@ const Graphs = () => {
 
     useEffect(()=> {
         setLoading(true)
-        axios.get(`/q?startdate=${startDate}&enddate=${endDate}`)
-            .then((res) => {
-                const data = res.data.map(d => {
-                    return ({
-                        time: new Date(d.time),
-                        temperature: +d.temperature,
-                        humidity: +d.humidity
+        if (startDate > endDate) {
+            setLoading(false)
+            setError(true)
+        } else {
+            axios.get(`/q?startdate=${startDate}&enddate=${endDate}`)
+                .then((res) => {
+                    const data = res.data.map(d => {
+                        return ({
+                            time: new Date(d.time),
+                            temperature: +d.temperature,
+                            humidity: +d.humidity
+                        })
                     })
+                    setData(data)
+                    setError(false)
+                    setLoading(false)
                 })
-                setData(data)
-                setError(false)
-                setLoading(false)
-            })
-            .catch(e=>setError(e));
+                .catch(e=>setError(e));
+        }
     },[startDate, endDate])
 
     if (loading) return <Loading />

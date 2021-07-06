@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './DateInput.css';
-import getDate from "../../../../utils/getDate";
 
 const DateInput = ({value, min=0, handler}) => {
     return (
-        <input type={"date"} min={min} max={getDate} value={value} onChange={(e)=>handler(e.target.value)} />
+        <input type={"date"} min={min} max={new Date().toISOString().substring(0, 10)} value={value} onChange={(e)=>handler(e.target.value)} />
     )
 };
 
