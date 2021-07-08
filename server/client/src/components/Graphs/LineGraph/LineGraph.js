@@ -5,7 +5,7 @@ import {AxisLeft} from "./AxisLeft/AxisLeft";
 import {Marks} from "./Marks/Marks";
 import {ControlsContext} from "../../Header/Controls/ControlsContext";
 
-const LineGraph = ({data, yLabel, colors}) => {
+const LineGraph = ({data, yLabel, colors, alert}) => {
     const {startDate, endDate} = useContext(ControlsContext);
     const [width, setWidth] = useState(+window.innerWidth);
     const [height, setHeight] = useState(+window.innerHeight * .4);
@@ -18,6 +18,7 @@ const LineGraph = ({data, yLabel, colors}) => {
     const yAxisLabelOffset = 50;
     const xValue = d => d.time;
     const yValue = d => d.dataset;
+    const fullYDataSet = data.map(set=>set.map(d=>yValue(d))).flat()
     const setXTicks = (d) => {
         if (d<3) {
             return '%H:%M';
@@ -47,13 +48,22 @@ const LineGraph = ({data, yLabel, colors}) => {
         .nice();
 
     const yScale = () => {
-        const fullDataSet = [].concat(
-            data.map(set=>set.map(d=>yValue(d))).flat(),
-        )
         return scaleLinear()
-            .domain(extent(fullDataSet))
+            .domain(extent(fullYDataSet))
             .range([innerHeight, 0])
             .nice();
+    }
+
+    const alertLine = () => {
+        if (alert && (extent(fullYDataSet)[0] <= +alert && +alert <= extent(fullYDataSet)[1])) {
+            return <line
+                x1={0}
+                y1={yScale()(alert)}
+                x2={innerWidth}
+                y2={yScale()(alert)}
+                stroke={"#69BD45"}
+            />
+        }
     }
 
     return (
@@ -81,14 +91,18 @@ const LineGraph = ({data, yLabel, colors}) => {
                         {yLabel}
                     </text>
                 </g>
-
-                {data.map((d,i)=><Marks
-                    key={`mark-${i}`}
-                    data={d}
-                    xScale={xScale} yScale={yScale()}
-                    xValue={xValue} yValue={yValue}
-                    stroke={colors[i]}
-                />)}
+                { alertLine() }
+                {
+                    data.map((d,i)=>
+                        <Marks
+                            key={`mark-${i}`}
+                            data={d}
+                            xScale={xScale} yScale={yScale()}
+                            xValue={xValue} yValue={yValue}
+                            stroke={colors[i]}
+                        />
+                    )
+                }
             </g>
         </svg>
     )

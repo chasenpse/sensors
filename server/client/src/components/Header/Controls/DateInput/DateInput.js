@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './DateInput.css';
 
 const DateInput = ({value, min=0, handler}) => {

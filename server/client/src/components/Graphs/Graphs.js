@@ -10,6 +10,7 @@ const Graphs = () => {
     const {combo, startDate, endDate} = useContext(ControlsContext);
 
     const [data, setData] = useState([]);
+    const [alerts, setAlerts] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -19,9 +20,16 @@ const Graphs = () => {
             setLoading(false)
             setError(true)
         } else {
-            axios.get(`/q?startdate=${startDate}&enddate=${endDate}`)
+            axios({
+                method:'post',
+                url:'/q',
+                data: {
+                    startDate,
+                    endDate
+                }
+            })
                 .then((res) => {
-                    const data = res.data.map(d => {
+                    const data = res.data.data.map(d => {
                         return ({
                             time: new Date(d.time),
                             temperature: +d.temperature,
@@ -29,6 +37,7 @@ const Graphs = () => {
                         })
                     })
                     setData(data)
+                    setAlerts(res.data.alerts)
                     setError(false)
                     setLoading(false)
                 })
@@ -67,11 +76,13 @@ const Graphs = () => {
                 data={[tempData]}
                 yLabel={"Temperature °F"}
                 colors={['#FF3341']}
+                alert={alerts.temp}
             />
             <LineGraph
                 data={[humidityData]}
                 yLabel={"Humidity %"}
                 colors={['#0099FF']}
+                alert={alerts.humidity}
             />
         </>
     )

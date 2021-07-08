@@ -4,6 +4,9 @@ const parse = require('csv-parse');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const os = require('os');
+const ini = require('ini');
+
+const config = ini.parse(fs.readFileSync('../config.ini', 'utf-8'))
 
 const app = express();
 app.use(bodyParser.json());
@@ -14,7 +17,7 @@ app.get('/host', (req,res)=> {
     res.status(200).json({host:os.hostname()})
 })
 
-app.get('/q', (req,res)=> {
+app.post('/q', (req,res)=> {
 
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -26,12 +29,12 @@ app.get('/q', (req,res)=> {
         return /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/.test(s);
     }
 
-    const startDate = validate(req.query.startdate) ?
-        new Date(req.query.startdate) :
+    const startDate = validate(req.body.startDate) ?
+        new Date(req.body.startDate) :
         new Date([yyyy,mm,dd].join('-'));
 
-    const endDate = validate(req.query.enddate) ?
-        new Date(req.query.enddate) :
+    const endDate = validate(req.body.endDate) ?
+        new Date(req.body.endDate) :
         new Date([yyyy,mm,dd].join('-'));
 
     const fileArr = [];
@@ -62,7 +65,13 @@ app.get('/q', (req,res)=> {
 
     Promise.all(promises)
         .then(dataArr => {
-            res.status(200).send(dataArr.flat());
+            res.status(200).send({
+                alerts: {
+                    temp: config.ifttt.WARNING_TEMP,
+                    humidity: config.ifttt.WARNING_HUMIDITY
+                },
+                data: dataArr.flat()
+            });
         })
         .catch(e => {
             res.status(400).send(e);
