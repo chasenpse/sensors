@@ -18,7 +18,7 @@ const Footer = () => {
     const genKaomoji = () => kaomojis[Math.floor(Math.random() * (kaomojis.length))];
 
     return (
-        <footer>
+        <footer className={"footer"}>
             {genKaomoji()} ~ notice me
         </footer>
     )

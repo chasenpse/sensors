@@ -1,14 +1,15 @@
 import React, {useState, useContext, useEffect} from 'react'
+import { v4 as uuidv4 } from 'uuid';
 import {scaleLinear, scaleTime, timeFormat, extent} from 'd3';
 import {AxisBottom} from "./AxisBottom/AxisBottom";
 import {AxisLeft} from "./AxisLeft/AxisLeft";
 import {Marks} from "./Marks/Marks";
 import {ControlsContext} from "../../Header/Controls/ControlsContext";
 
-const LineGraph = ({data, yLabel, colors, alert}) => {
+const LineGraph = ({data}) => {
     const {startDate, endDate} = useContext(ControlsContext);
     const [width, setWidth] = useState(+window.innerWidth);
-    const [height, setHeight] = useState(+window.innerHeight * .4);
+    const [height, setHeight] = useState(+window.innerHeight * .5);
     const [xAxisTickFormat, setXAxisTickFormat] = useState('%m/%d');
 
     const margin = { top: 20, right: 50, bottom: 65, left: 90 };
@@ -18,7 +19,7 @@ const LineGraph = ({data, yLabel, colors, alert}) => {
     const yAxisLabelOffset = 50;
     const xValue = d => d.time;
     const yValue = d => d.dataset;
-    const fullYDataSet = data.map(set=>set.map(d=>yValue(d))).flat()
+    const fullYDataSet = data.map(dataObj=>dataObj.data.map(i=>yValue(i))).flat()
     const setXTicks = (d) => {
         if (d<3) {
             return '%H:%M';
@@ -39,11 +40,11 @@ const LineGraph = ({data, yLabel, colors, alert}) => {
     }, []);
 
     useEffect(() => {
-        setXAxisTickFormat(setXTicks(Math.ceil(data[0].length / 1440))); // 1440 minutes = 1 day
+        setXAxisTickFormat(setXTicks(Math.ceil(data[0].data.length / 1440))); // 1440 minutes = 1 day
     }, [data, startDate, endDate]);
 
     const xScale = scaleTime()
-        .domain(extent(data[0], xValue))
+        .domain(extent(data[0].data, xValue))
         .range([0, innerWidth])
         .nice();
 
@@ -54,57 +55,76 @@ const LineGraph = ({data, yLabel, colors, alert}) => {
             .nice();
     }
 
-    const alertLine = () => {
-        if (alert && (extent(fullYDataSet)[0] <= +alert && +alert <= extent(fullYDataSet)[1])) {
-            return <line
-                x1={0}
-                y1={yScale()(alert)}
-                x2={innerWidth}
-                y2={yScale()(alert)}
-                stroke={"#69BD45"}
-            />
-        }
+    const updateColor = (key, val) => {
+        localStorage.setItem(key, val)
     }
 
     return (
-        <svg width={width} height={height}>
-            <g transform={`translate(${margin.left},${margin.top})`}>
-                <AxisBottom
-                    xScale={xScale}
-                    innerHeight={innerHeight}
-                    tickFormat={timeFormat(xAxisTickFormat)}
-                    tickOffset={25}
-                />
-                <text
-                    className="axis-label"
-                    x={innerWidth / 2} y={innerHeight + xAxisLabelOffset}
-                    textAnchor="middle"
-                >
-                    {"Time"}
-                </text>
-                <AxisLeft yScale={yScale()} innerWidth={innerWidth} tickOffset={5} />
-                <g transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}>
+        <>
+            <div className={"legend"}>
+                {data.map(({name, colors, yLabel})=>
+                    <>
+                        <span className={"legendItem"}>
+                            <label>{yLabel}:</label><input type={"color"} value={colors.line} onChange={(e)=>{updateColor(`${name}Color`, e.target.value); colors.setLine(e.target.value)}} />
+                        </span>
+                        <span className={"legendItem"}>
+                           <label>Alert:</label><input type={"color"} value={colors.alert} onChange={(e)=>{updateColor(`${name}AlertColor`, e.target.value); colors.setAlert(e.target.value)}} />
+                        </span>
+                    </>
+                )}
+            </div>
+            <svg width={width} height={height}>
+                <g transform={`translate(${margin.left},${margin.top})`}>
+                    <AxisBottom
+                        xScale={xScale}
+                        innerHeight={innerHeight}
+                        tickFormat={timeFormat(xAxisTickFormat)}
+                        tickOffset={25}
+                    />
                     <text
                         className="axis-label"
+                        x={innerWidth / 2} y={innerHeight + xAxisLabelOffset}
                         textAnchor="middle"
                     >
-                        {yLabel}
+                        {"Time"}
                     </text>
+                    <AxisLeft yScale={yScale()} innerWidth={innerWidth} tickOffset={5} />
+                    <g transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}>
+                        <text
+                            className="axis-label"
+                            textAnchor="middle"
+                        >
+                            {data.map(dataObj=>dataObj.yLabel).join(" / ")}
+                        </text>
+                    </g>
+                    {
+                        data.map(({alert,colors})=>{
+                            if (alert && extent(fullYDataSet)[0] < alert && alert < extent(fullYDataSet)[1]) {
+                                return <line
+                                    key={uuidv4()}
+                                    x1={0}
+                                    y1={yScale()(alert)}
+                                    x2={innerWidth}
+                                    y2={yScale()(alert)}
+                                    stroke={colors.alert}
+                                />
+                            }
+                        })
+                    }
+                    {
+                        data.map(({data,colors})=>
+                            <Marks
+                                key={uuidv4()}
+                                data={data}
+                                xScale={xScale} yScale={yScale()}
+                                xValue={xValue} yValue={yValue}
+                                stroke={colors.line}
+                            />
+                        )
+                    }
                 </g>
-                { alertLine() }
-                {
-                    data.map((d,i)=>
-                        <Marks
-                            key={`mark-${i}`}
-                            data={d}
-                            xScale={xScale} yScale={yScale()}
-                            xValue={xValue} yValue={yValue}
-                            stroke={colors[i]}
-                        />
-                    )
-                }
-            </g>
-        </svg>
+            </svg>
+        </>
     )
 }
 

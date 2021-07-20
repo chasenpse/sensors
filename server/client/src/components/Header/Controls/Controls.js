@@ -11,12 +11,20 @@ const Controls = () => {
         endDate, setEndDate
     } = useContext(ControlsContext);
 
+    const toggle = () => {
+        setCombo((prev)=> {
+            let val = prev==="true" ? "false" : "true";
+            localStorage.setItem("combo",val);
+            return val;
+        });
+    }
+
     return (
         <div className={"controls"}>
             <ToggleButton
                 status={combo}
                 label={"Combo"}
-                handler={setCombo}
+                handler={toggle}
             />
             <div className={"dateRangeContainer"}>
                 <span className={"rangeLabel"}>Range:</span>

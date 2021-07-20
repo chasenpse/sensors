@@ -1,4 +1,4 @@
-input {
+input[type="date"] {
     box-sizing: border-box;
     padding:0 10px;
     width:170px;

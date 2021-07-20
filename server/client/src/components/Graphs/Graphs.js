@@ -10,6 +10,10 @@ const Graphs = () => {
     const {combo, startDate, endDate} = useContext(ControlsContext);
 
     const [data, setData] = useState([]);
+    const [tempColor, setTempColor] = useState(localStorage.getItem('tempColor') || "#FF3341");
+    const [tempAlertColor, setTempAlertColor] = useState(localStorage.getItem('tempAlertColor') || "#8540BA");
+    const [humidityColor, setHumidityColor] = useState(localStorage.getItem('humidityColor') || "#0099FF");
+    const [humidityAlertColor, setHumidityAlertColor] = useState(localStorage.getItem('humidityAlertColor') || "#69BD45");
     const [alerts, setAlerts] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -48,42 +52,54 @@ const Graphs = () => {
     if (loading) return <Loading />
     if (error) return <Error />
 
-    const tempData = data.map(d=>(
+    const tempDataSet = data.map(d=>(
         {
             time: d.time,
             dataset: d.temperature
         }
     ));
 
-    const humidityData = data.map(d=>(
+    const humidityDataSet = data.map(d=>(
         {
             time: d.time,
             dataset: d.humidity
         }
     ));
 
-    if (combo) {
-        return <LineGraph
-            data={[tempData, humidityData]}
-            yLabel={"Temperature °F / Humidity %"}
-            colors={['#FF3341','#0099FF']}
-        />
+    const tempData = {
+        name: "temp",
+        yLabel: "Temperature °F",
+        data: tempDataSet,
+        alert: alerts.temp,
+        colors: {
+            line: tempColor,
+            setLine: setTempColor,
+            alert: tempAlertColor,
+            setAlert: setTempAlertColor
+        }
+    }
+
+    const humidityData = {
+        name: "humidity",
+        yLabel: "Humidity %",
+        data: humidityDataSet,
+        alert: alerts.humidity,
+        colors: {
+            line: humidityColor,
+            setLine: setHumidityColor,
+            alert: humidityAlertColor,
+            setAlert: setHumidityAlertColor
+        }
+    }
+
+    if (combo==="true") {
+        return <LineGraph data={[tempData, humidityData]} />
     }
 
     return(
         <>
-            <LineGraph
-                data={[tempData]}
-                yLabel={"Temperature °F"}
-                colors={['#FF3341']}
-                alert={alerts.temp}
-            />
-            <LineGraph
-                data={[humidityData]}
-                yLabel={"Humidity %"}
-                colors={['#0099FF']}
-                alert={alerts.humidity}
-            />
+            <LineGraph data={[tempData]} />
+            <LineGraph data={[humidityData]} />
         </>
     )
 }

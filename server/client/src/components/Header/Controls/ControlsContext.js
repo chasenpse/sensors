@@ -8,7 +8,7 @@ const dateToYYYYMMDD = (date) => {
 }
 
 export const ControlsProvider = props => {
-    const [combo, setCombo] = useState(false);
+    const [combo, setCombo] = useState(localStorage.getItem('combo') || "false");
     const [startDate, setStartDate] = useState(dateToYYYYMMDD(new Date().toLocaleDateString()));
     const [endDate, setEndDate] = useState(dateToYYYYMMDD(new Date().toLocaleDateString()));
     return (
