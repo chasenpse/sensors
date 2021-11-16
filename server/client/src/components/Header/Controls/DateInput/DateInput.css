@@ -9,8 +9,6 @@ input[type="date"] {
     border: 1px solid #FFF;
     border-radius:4px;
     cursor: pointer;
-    -webkit-appearance: textfield;
-    -moz-appearance: textfield;
 }
 ::-webkit-calendar-picker-indicator {
     filter: invert(1);
