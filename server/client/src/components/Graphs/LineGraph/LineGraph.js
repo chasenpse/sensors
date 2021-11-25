@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react'
+import React, {useState, useContext, useEffect, useMemo} from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import {scaleLinear, scaleTime, timeFormat, extent} from 'd3';
 import {AxisBottom} from "./AxisBottom/AxisBottom";
@@ -7,25 +7,31 @@ import {Marks} from "./Marks/Marks";
 import {ControlsContext} from "../../Header/Controls/ControlsContext";
 
 const LineGraph = ({data}) => {
+    const mobileMargin = useMemo(() => {
+        return {top: 20, right: 20, bottom: 65, left: 80}
+    }, []);
+    const desktopMargin = useMemo(() => {
+        return {top: 20, right: 50, bottom: 65, left: 90}
+    }, []);
+
+    const [margin, setMargin] = useState(+window.innerWidth < 1020 ? mobileMargin : desktopMargin);
     const {startDate, endDate} = useContext(ControlsContext);
     const [width, setWidth] = useState(+window.innerWidth);
-    const [height, setHeight] = useState(+window.innerHeight * .5);
+    const [height, setHeight] = useState(+window.innerWidth < 1020 ? 320 : 420);
     const [xAxisTickFormat, setXAxisTickFormat] = useState('%m/%d');
-
-    const margin = { top: 20, right: 50, bottom: 65, left: 90 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
     const xAxisLabelOffset = 60;
     const yAxisLabelOffset = 50;
     const xValue = d => d.time;
     const yValue = d => d.dataset;
-    const fullYDataSet = data.map(dataObj=>dataObj.data.map(i=>yValue(i))).flat()
+    const fullYDataSet = data.map(dataObj => dataObj.data.map(i => yValue(i))).flat()
     const setXTicks = (d) => {
-        if (d<3) {
+        if (d < 3) {
             return '%H:%M';
-        } else if (d>=3 && d<61) {
+        } else if (d >= 3 && d < 61) {
             return '%b %d';
-        } else if (d>=61) {
+        } else if (d >= 61) {
             return '%b';
         } else {
             return '%H:%M';
@@ -33,9 +39,10 @@ const LineGraph = ({data}) => {
     }
 
     useEffect(() => {
-        window.addEventListener("resize", ()=>{
+        window.addEventListener("resize", () => {
             setWidth(+window.innerWidth);
-            setHeight(+window.innerHeight * .4);
+            setHeight(+window.innerWidth < 1020 ? 320 : 420);
+            setMargin(+window.innerWidth < 1020 ? mobileMargin : desktopMargin);
         });
     }, []);
 
@@ -60,17 +67,17 @@ const LineGraph = ({data}) => {
     }
 
     return (
-        <>
+        <div className={'graph'}>
             <div className={"legend"}>
                 {data.map(({name, colors, yLabel})=>
-                    <>
+                    <React.Fragment key={yLabel}>
                         <span className={"legendItem"}>
-                            <label>{yLabel}:</label><input type={"color"} value={colors.line} onChange={(e)=>{updateColor(`${name}Color`, e.target.value); colors.setLine(e.target.value)}} />
+                            <label>Color:</label><input type={"color"} value={colors.line} onChange={(e)=>{updateColor(`${name}Color`, e.target.value); colors.setLine(e.target.value)}} />
                         </span>
                         <span className={"legendItem"}>
                            <label>Alert:</label><input type={"color"} value={colors.alert} onChange={(e)=>{updateColor(`${name}AlertColor`, e.target.value); colors.setAlert(e.target.value)}} />
                         </span>
-                    </>
+                    </React.Fragment>
                 )}
             </div>
             <svg width={width} height={height}>
@@ -79,15 +86,8 @@ const LineGraph = ({data}) => {
                         xScale={xScale}
                         innerHeight={innerHeight}
                         tickFormat={timeFormat(xAxisTickFormat)}
-                        tickOffset={25}
+                        tickOffset={32}
                     />
-                    <text
-                        className="axis-label"
-                        x={innerWidth / 2} y={innerHeight + xAxisLabelOffset}
-                        textAnchor="middle"
-                    >
-                        {"Time"}
-                    </text>
                     <AxisLeft yScale={yScale()} innerWidth={innerWidth} tickOffset={5} />
                     <g transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}>
                         <text
@@ -124,7 +124,7 @@ const LineGraph = ({data}) => {
                     }
                 </g>
             </svg>
-        </>
+        </div>
     )
 }
 
