@@ -32,6 +32,8 @@ input[type="color"]::-moz-color-swatch {
     border:1px solid rgba(255,255,255,0.1);
     border-radius: 4px;
 }
+.graph {
+}
 .legend {
     display: flex;
     justify-content: flex-end;
@@ -39,6 +41,7 @@ input[type="color"]::-moz-color-swatch {
     padding:0 20px;
 }
 .legendItem {
+    font-size:0.8rem;
     display:flex;
     align-items: center;
     margin-right:1rem;

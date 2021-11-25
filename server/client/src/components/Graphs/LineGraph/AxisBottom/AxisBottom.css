@@ -4,3 +4,8 @@
 .tick.bottom {
     fill:#FFF;
 }
+.bottomAxisText {
+    text-anchor: end;
+    fill: rgba(255,255,255,0.5);
+    font-size:0.8rem;
+}
