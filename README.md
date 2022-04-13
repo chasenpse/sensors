@@ -60,12 +60,12 @@ Lastly, while still in the `./server/client` directory run `npm run build` to bu
 
 ### 3. Create systemd service
 
-Open `./rpisensors.service` and make sure that the `ExecStart` and `User` options are correct.
+Open `rpisensors.service` and make sure that the `ExecStart` and `User` options are correct.
 
-Copy `./rpisensors.service` to `/etc/systemd/system/rpisensors.service` by opening a terminal, navigating to the project root directory, and running:
+Copy `rpisensors.service` to `/etc/systemd/system/rpisensors.service` by opening a terminal, navigating to the project root directory, and running:
 
 ```bash
-sudo cp sensors.service /etc/systemd/system/rpisensors.service
+sudo cp rpisensors.service /etc/systemd/system/rpisensors.service
 ```
 
 Since nvm will manage our node/npm versions a simple shell script is used to properly create the service, which can be found in `start.sh`. This script **must** be executable by running `chmod +x /path/to/script/start.sh`
