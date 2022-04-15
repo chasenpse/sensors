@@ -1,5 +1,6 @@
 .title h1 {
     font-size:1.5em;
+    line-height:1.5em;
     overflow: hidden;
 }
 .title h1 span {
